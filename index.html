@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <title>Clicker</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      class Clicker extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            points: 0,
+            rate: 1,
+            multiplier: 1,
+            determinationAmount: 0,
+            foreAmount: 0,
+            timeAmount: 0,
+            warning: ""
+          };
+          // this.knowledgeClick = this.knowledgeClick.bind(this);
+        }
+
+        knowledgeClick = () => {
+          this.setState({
+            points:
+              this.state.points +
+              Math.floor(this.state.rate * this.state.multiplier)
+          });
+        };
+
+        determinationClick = () => {
+          if (this.state.points < 10) {
+            return this.setState({ warning: "Not enough points!" });
+          }
+          this.setState({
+            determinationAmount: this.state.determinationAmount + 1,
+            rate: this.state.rate + 1,
+            points: this.state.points - 10
+          });
+        };
+
+        foreKnowlegeClick = () => {
+          if (this.state.points < 2) {
+            return;
+          }
+          this.setState({
+            foreAmount: this.state.foreAmount + 1,
+            points: Math.floor(this.state.points / 2),
+            multiplier: this.state.multiplier + 0.01
+          });
+        };
+
+        timeClick = () => {
+          if (this.state.points < 100) {
+            return;
+          }
+          this.setState({
+            points: this.state.points - 100,
+            rate: this.state.rate + 10,
+            timeAmount: this.state.timeAmount + 1
+          });
+        };
+
+        render = () => {
+          const {
+            points,
+            determinationAmount,
+            warning,
+            rate,
+            foreAmount,
+            timeAmount
+          } = this.state;
+
+          return (
+            <div>
+              <p>Knowledge Points: {points} </p>
+              <button onClick={this.knowledgeClick.bind(this)}>
+                Click + {Math.floor(this.state.rate * this.state.multiplier)}
+              </button>
+              <ul>
+                <button onClick={this.determinationClick}>
+                  Buy Determination
+                </button>
+
+                <ul>
+                  <li>Amount: {determinationAmount}</li>
+                  <li>Cost: 10</li>
+                  <li>Rate Increase: 1</li>
+                </ul>
+              </ul>
+              <ul>
+                <button onClick={this.foreKnowlegeClick}>
+                  Buy Foreknowledge
+                </button>
+                <ul>
+                  <li>Amount: {foreAmount}</li>
+                  <li>Cost: 1/2 of Total Knowledge Points</li>
+                  <li>Rate Increase: 10%</li>
+                </ul>
+              </ul>
+              <ul>
+                <button onClick={this.timeClick}>Buy Time</button>
+                <ul>
+                  <li>Amount: {timeAmount}</li>
+                  <li>Cost: 100</li>
+                  <li>Rate Increase: 10</li>
+                </ul>
+              </ul>
+            </div>
+          );
+        };
+      }
+
+      const rootElement = document.getElementById("root");
+      ReactDOM.render(<Clicker />, rootElement);
+    </script>
+  </body>
+</html>
